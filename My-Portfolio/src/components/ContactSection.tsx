@@ -6,7 +6,7 @@ const ContactSection = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = `mailto:contact@example.com?subject=Portfolio Contact from ${form.name}&body=${form.message}%0A%0AFrom: ${form.email}`;
+    window.location.href = `davidm0l4n0@gmail.com?subject=Portfolio Contact from ${form.name}&body=${form.message}%0A%0AFrom: ${form.email}`;
   };
 
   return (
@@ -82,7 +82,7 @@ const ContactSection = () => {
                 <Github size={18} />
               </a>
               <a
-                href="mailto:contact@example.com"
+                href="davidm0l4n0@gmail.com"
                 className="flex items-center justify-center w-10 h-10 rounded-lg border border-border bg-card text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors"
               >
                 <Mail size={18} />
