@@ -1,4 +1,5 @@
 import { ArrowDown, Download } from "lucide-react";
+import cvFile from "/public/David_Molano_CV_ATS.pdf?url";
 
 const HeroSection = () => {
   return (
@@ -31,7 +32,7 @@ const HeroSection = () => {
             Get in Touch
           </a>
           <a
-            href="/David_Molano_CV_ATS.pdf"
+            href={cvFile}
             download
             className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-6 py-3 text-sm font-medium text-primary hover:bg-primary/20 transition-colors duration-150"
           >
