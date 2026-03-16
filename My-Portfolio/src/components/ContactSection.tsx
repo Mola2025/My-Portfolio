@@ -2,11 +2,31 @@ import { useState } from "react";
 import { Github, Mail, Linkedin, Send } from "lucide-react";
 
 const ContactSection = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    window.location.href = `davidm0l4n0@gmail.com?subject=Portfolio Contact from ${form.name}&body=${form.message}%0A%0AFrom: ${form.email}`;
+    setStatus("sending");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/xvzwbeyb", {
+        method: "POST",
+        body: data,
+        headers: { Accept: "application/json" },
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -21,10 +41,8 @@ const ContactSection = () => {
             <div>
               <label className="text-sm text-muted-foreground block mb-1.5">Name</label>
               <input
-                title="name"
+                name="name"
                 type="text"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none transition-colors"
                 required
               />
@@ -32,10 +50,8 @@ const ContactSection = () => {
             <div>
               <label className="text-sm text-muted-foreground block mb-1.5">Email</label>
               <input
-                title="email"
+                name="email"
                 type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none transition-colors"
                 required
               />
@@ -43,9 +59,7 @@ const ContactSection = () => {
             <div>
               <label className="text-sm text-muted-foreground block mb-1.5">Message</label>
               <textarea
-                title="message"
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                name="message"
                 rows={4}
                 className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none transition-colors resize-none"
                 required
@@ -53,12 +67,25 @@ const ContactSection = () => {
             </div>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors w-full justify-center"
+              disabled={status === "sending"}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors w-full justify-center disabled:opacity-60"
             >
               <Send size={16} />
-              Send Message
+              {status === "sending" ? "Sending..." : "Send Message"}
             </button>
+
+            {status === "success" && (
+              <p className="text-sm text-green-500 text-center">
+                ✓ Message sent! I'll get back to you soon.
+              </p>
+            )}
+            {status === "error" && (
+              <p className="text-sm text-red-500 text-center">
+                Something went wrong. Please try again.
+              </p>
+            )}
           </form>
+
           <div>
             <p className="text-muted-foreground leading-relaxed mb-8">
               I'm always open to discussing new opportunities, creative projects, or
@@ -82,7 +109,7 @@ const ContactSection = () => {
                 <Github size={18} />
               </a>
               <a
-                href="davidm0l4n0@gmail.com"
+                href="mailto:davidm0l4n0@gmail.com"
                 className="flex items-center justify-center w-10 h-10 rounded-lg border border-border bg-card text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors"
               >
                 <Mail size={18} />
